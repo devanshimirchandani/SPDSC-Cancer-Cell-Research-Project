@@ -77,4 +77,5 @@ To achieve this, we needed to:
 
 ## Project Resources
 - [Seurat analysis tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html)
+- [Seurat command list](https://satijalab.org/seurat/articles/essential_commands.html)
 - [Colon cancer paper](https://www.nature.com/articles/s41588-022-01088-x)
