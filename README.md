@@ -9,8 +9,9 @@
 	- [Pull Requests](#pull-requests)
 		- [Title](#title)
 		- [Description](#description)
-		- [Example Pull Request](#example-pr)
+		- [Example Pull Request](#example-pull-request)
 - [Developing Team](#developing-team)
+- [Project Resources](#project-resources)
 
 ## Overview
 
@@ -74,3 +75,6 @@ To achieve this, we needed to:
 - Nancy
 - Veronica
 
+## Project Resources
+- [Seurat analysis tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html)
+- [Colon cancer paper](https://www.nature.com/articles/s41588-022-01088-x)
