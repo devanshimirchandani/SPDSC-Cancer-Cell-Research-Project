@@ -10,8 +10,6 @@
 		- [Title](#title)
 		- [Description](#description)
 		- [Example Pull Request](#example-pr)
-- [Usage](#usage)
-- [Security Considerations](#security-onsiderations)
 - [Developing Team](#developing-team)
 
 ## Overview
