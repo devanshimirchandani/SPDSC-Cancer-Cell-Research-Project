@@ -18,7 +18,13 @@ Exploring predictive modelling of disease states based on cell type distribution
 
 ## Contributing
 
-Read the guidelines below to write good commit messages, branch names, and make pull requests that follow the conventions we will be using throughout the project.
+Read the guidelines below to write good commit messages, and branch names, and make pull requests that follow the conventions we will be using throughout the project.
+
+## Learning GitHub
+
+- [Documentation](https://docs.github.com/en/get-started/start-your-journey/about-github-and-git)
+- [Intro Video 1](https://www.youtube.com/watch?v=pBy1zgt0XPc)
+- [Intro Video 2](https://www.youtube.com/watch?v=iv8rSLsi1xo)
 
 ### Commit Messages
 
