@@ -72,7 +72,7 @@ To achieve this, we needed to:
 
 ## Developing Team
 - [Devanshi Mirchandani](https://github.com/devanshimirchandani)
-- Nancy
+- Nancy [Mnasnan Seamorntham](https://github.com/mnasnan)
 - Veronica
 
 ## Project Resources
