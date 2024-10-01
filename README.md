@@ -73,7 +73,7 @@ To achieve this, we needed to:
 ## Developing Team
 - [Devanshi Mirchandani](https://github.com/devanshimirchandani)
 - Nancy [Mnasnan Seamorntham](https://github.com/mnasnan)
-- Veronica
+- [Veronica](https://github.com/Veronicazwt)
 
 ## Project Resources
 - [Seurat analysis tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html)
