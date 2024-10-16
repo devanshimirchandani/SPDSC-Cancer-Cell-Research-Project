@@ -251,285 +251,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming CrC_counts and CrC_metadata contain multiple samples, subset each sample</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset for sample 1</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the metadata and counts for sample 1 ("B001-A-301")</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>CrC_metadata_subset1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(metadata, orig.ident <span class="sc">==</span> <span class="st">"B001-A-301"</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset1 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset1)]</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset1, <span class="at">meta.data =</span> CrC_metadata_subset1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: [[&lt;- defined for objects of type "S4" only for subclasses of
-environment</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset for sample 2</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>CrC_metadata_subset2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(metadata, orig.ident <span class="sc">==</span> <span class="st">"F007"</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset2 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset2)]</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset2, <span class="at">meta.data =</span> CrC_metadata_subset2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: [[&lt;- defined for objects of type "S4" only for subclasses of
-environment</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset for sample 3</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>CrC_metadata_subset3 <span class="ot">&lt;-</span> <span class="fu">subset</span>(metadata, orig.ident <span class="sc">==</span> <span class="st">"CRC1_8810"</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset3 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset3)]</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset3, <span class="at">meta.data =</span> CrC_metadata_subset3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: [[&lt;- defined for objects of type "S4" only for subclasses of
-environment</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Normalizing layer: counts</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Normalizing layer: counts</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Normalizing layer: counts</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat1, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding variable features for layer counts</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat2, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding variable features for layer counts</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat3, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding variable features for layer counts</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>anchors <span class="ot">&lt;-</span> <span class="fu">FindIntegrationAnchors</span>(<span class="at">object.list =</span> <span class="fu">list</span>(crc_seurat1, crc_seurat2, crc_seurat3), <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Computing 2000 integration features</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Scaling features for provided objects</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding all pairwise anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Running CCA</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Merging objects</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding neighborhoods</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>    Found 5197 anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Filtering anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>    Retained 2027 anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Running CCA</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Merging objects</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding neighborhoods</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>    Found 14455 anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Filtering anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>    Retained 1648 anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Running CCA</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Merging objects</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding neighborhoods</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>    Found 5720 anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Filtering anchors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>    Retained 720 anchors</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">IntegrateData</span>(<span class="at">anchorset =</span> anchors, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Merging dataset 2 into 1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Extracting anchors for merged samples</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding integration vectors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding integration vector weights</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Integrating data</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Layer counts isn't present in the assay object; returning NULL</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Merging dataset 1 2 into 3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Extracting anchors for merged samples</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding integration vectors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Different cells in new layer data than already exists for scale.data</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Finding integration vector weights</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Integrating data</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Layer counts isn't present in the assay object; returning NULL</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale integrated data</span></span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(crc_integrated)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Centering and scaling data matrix</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run PCA on integrated data</span></span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(crc_integrated, <span class="at">npcs =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>PC_ 1 
-Positive:  RNF43, LINC01811, KANK1, PLCB4, PIP5K1B, CACNA1D, AC011287.1, GMDS, MGAT5, LINC01748 
-       NEBL, CCSER1, AC009975.1, DACH1, SLC38A11, LINC00511, IMMP2L, DNAH14, MACROD2, SLC12A2 
-       MIR4713HG, NKD1, MGAM2, AC013652.1, CFTR, KIZ, PVT1, NAALADL2, GPCPD1, SAMD5 
-Negative:  SGIP1, CDH11, TCF4, FBXL7, CALD1, RBMS3-AS3, COL6A3, VCAN, ZEB1, BNC2 
-       RUNX1T1, IGFBP7, LAMA4, GPC6, ADAMTS12, COL4A2, WWTR1, PTPRM, GLI2, COL4A1 
-       SULF1, NEGR1, MEIS1, AKT3, ANTXR1, TSHZ2, COL1A2, CPED1, LSAMP, RBMS1 
-PC_ 2 
-Positive:  NRXN3, GRM8, AC007277.1, NKD1, NCKAP5, TRPM3, APCDD1, LINC01594, DIAPH3, DACH1 
-       OSBPL6, AC016205.1, PRSS23, RUNX1, NOTUM, LEF1, PDE10A, PBX1, NRCAM, FHOD3 
-       BRIP1, CIT, PPP1R9A, MELK, TNFRSF19, CEP112, POLQ, PLB1, MME, KIZ 
-Negative:  PTPRN2, RBFOX1, NOX1, FREM1, GK, SLC7A11, FRY, CLDN10-AS1, TBXAS1, CAPN8 
-       PRKG1, LRRTM4, ARHGEF28, CFTR, AL160290.2, SAT1, MARCH3, BMS1P14, DOCK11, GPCPD1 
-       FTX, AC020916.1, CD55, LINC01060, NEAT1, ATRNL1, ROBO2, SELENOP, CCSER1, FGGY 
-PC_ 3 
-Positive:  FTX, PRKG1, GMDS, AC009975.1, LINC01811, CACNA1D, PLCB4, IMMP2L, NAALADL2, FGGY 
-       KAZN, MACROD2, CCSER1, KANK1, FOXP2, TPM1, PDE4D, VMP1, NEBL, DIAPH3 
-       MID1, NEAT1, RBFOX1, EXT1, MGAT5, FREM1, FRY, CHRM3, PRELID2, LINC01748 
-Negative:  PTPRC, DOCK2, ARHGAP15, SFMBT2, THEMIS, FYB1, CHST11, IKZF1, LCP2, DOCK8 
-       ITGA4, LINC01934, APBB1IP, SLFN12L, SAMSN1, ELMO1, MT-ND4, CD247, CD96, RIPOR2 
-       PRKCB, PPP1R16B, ANKRD44, UBASH3B, C22orf34, FLI1, MEF2C, RHOH, CARD11, STAB1 
-PC_ 4 
-Positive:  DIAPH3, ASPM, MELK, ANLN, CIT, POLQ, SPC25, AC091057.6, BRCA2, BUB1B 
-       KNL1, CENPI, BRIP1, IQGAP3, NCAPG2, CENPK, NUSAP1, NCAPG, KIF18B, AC016205.1 
-       FANCI, CENPE, ATAD2, BUB1, PTPRC, RFC3, CENPP, NDC80, EZH2, TPX2 
-Negative:  NKD1, DACH1, NRXN3, KIZ, APCDD1, TRPM3, NCKAP5, AC007277.1, NBEA, GRM8 
-       PBX1, LINC01594, LINC01748, RNF43, PPP1R9A, NAALADL2, LINC01811, NOTUM, PDE10A, DNAJC15 
-       LAMA2, DNAH14, AC013652.1, KANK1, SNTB1, LEF1, COL27A1, NRCAM, FHOD3, IMMP2L 
-PC_ 5 
-Positive:  ASPM, CDH11, TOP2A, TPX2, CENPE, DIAPH3, LINC00578, BUB1, DLGAP5, MKI67 
-       CENPF, IQGAP3, ANLN, COL1A2, ADAMTS12, LSAMP, COL6A3, MAPK10, SGIP1, CIT 
-       GLI2, VCAN, CALD1, GPC6, MELK, KNL1, AC091057.6, AEBP1, SPC25, NUSAP1 
-Negative:  DOCK4, ELMO1, MYO5A, MCTP1, CHST11, SFMBT2, PECAM1, MSR1, NRP1, PTPRC 
-       QKI, DOCK8, EGFL7, FRMD4A, STAB1, FRMD4B, ENTPD1, DOCK2, TFEC, FLI1 
-       ST3GAL6, LRMDA, FYB1, ATP8B4, NRP2, ITGAX, SLC9A9, CALCRL, ARHGAP29, ARL15 </code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP on integrated data</span></span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(crc_integrated, <span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>13:04:03 UMAP embedding parameters a = 0.9922 b = 1.112</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>13:04:03 Read 13430 rows and found 30 numeric columns</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>13:04:03 Using Annoy for neighbor search, n_neighbors = 30</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>13:04:03 Building Annoy index with metric = cosine, n_trees = 50</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>0%   10   20   30   40   50   60   70   80   90   100%</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>[----|----|----|----|----|----|----|----|----|----|</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>**************************************************|
-13:04:03 Writing NN index file to temp file /var/folders/bh/pn62w8rd2b3c8hc7l52y9g380000gn/T//Rtmpyid3L5/file136d63dd88d7f
-13:04:03 Searching Annoy index using 1 thread, search_k = 3000
-13:04:06 Annoy recall = 100%
-13:04:06 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-13:04:06 Initializing from normalized Laplacian + noise (using RSpectra)
-13:04:06 Commencing optimization for 200 epochs, with 609916 positive edges
-13:04:11 Optimization finished</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize UMAP plot</span></span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(crc_integrated, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset1 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset1)]  <span class="co"># Subset the count data to match the metadata</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset1, <span class="at">meta.data =</span> CrC_metadata_subset1)  <span class="co"># Create Seurat object for sample 1</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the metadata and counts for sample 2 ("F007")</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>CrC_metadata_subset2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(metadata, orig.ident <span class="sc">==</span> <span class="st">"F007"</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset2 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset2)]  <span class="co"># Subset the count data to match the metadata</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset2, <span class="at">meta.data =</span> CrC_metadata_subset2)  <span class="co"># Create Seurat object for sample 2</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the metadata and counts for sample 3 ("CRC1_8810")</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>CrC_metadata_subset3 <span class="ot">&lt;-</span> <span class="fu">subset</span>(metadata, orig.ident <span class="sc">==</span> <span class="st">"CRC1_8810"</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset3 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset3)]  <span class="co"># Subset the count data to match the metadata</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset3, <span class="at">meta.data =</span> CrC_metadata_subset3)  <span class="co"># Create Seurat object for sample 3</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize the data for each Seurat object individually</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat1)  <span class="co"># Normalization for sample 1</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat2)  <span class="co"># Normalization for sample 2</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat3)  <span class="co"># Normalization for sample 3</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the 2000 most variable features for each Seurat object</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat1, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)  <span class="co"># Identify variable features for sample 1</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat2, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)  <span class="co"># Identify variable features for sample 2</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat3, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)  <span class="co"># Identify variable features for sample 3</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Find integration anchors across the three Seurat objects</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>anchors <span class="ot">&lt;-</span> <span class="fu">FindIntegrationAnchors</span>(<span class="at">object.list =</span> <span class="fu">list</span>(crc_seurat1, crc_seurat2, crc_seurat3), <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Integrate the datasets using the identified anchors</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">IntegrateData</span>(<span class="at">anchorset =</span> anchors, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale the integrated dataset</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(crc_integrated)</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform PCA (Principal Component Analysis) on the integrated dataset</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(crc_integrated, <span class="at">npcs =</span> <span class="dv">30</span>)</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP (Uniform Manifold Approximation and Projection) on the integrated dataset to visualise the data in 2D space</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(crc_integrated, <span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP to visualise cell clusters</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(crc_integrated, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -540,9 +303,10 @@ Negative:  DOCK4, ELMO1, MYO5A, MCTP1, CHST11, SFMBT2, PECAM1, MSR1, NRP1, PTPRC
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Optionally, create heatmaps or other visualizations</span></span>
-<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>top10_integrated <span class="ot">&lt;-</span> <span class="fu">head</span>(<span class="fu">VariableFeatures</span>(crc_integrated), <span class="dv">10</span>)</span>
-<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(crc_integrated, <span class="at">features =</span> top10_integrated) <span class="sc">+</span> <span class="fu">NoLegend</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualise the top 10 variable features using a heatmap</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>top10_integrated <span class="ot">&lt;-</span> <span class="fu">head</span>(<span class="fu">VariableFeatures</span>(crc_integrated), <span class="dv">10</span>)  <span class="co"># Identify the top 10 variable features</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(crc_integrated, <span class="at">features =</span> top10_integrated) <span class="sc">+</span> <span class="fu">NoLegend</span>()  <span class="co"># Create heatmap of the top 10 variable features</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>

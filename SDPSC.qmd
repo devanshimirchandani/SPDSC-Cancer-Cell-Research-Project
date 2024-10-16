@@ -87,54 +87,56 @@ DoHeatmap(crc_seurat, features = top10) + NoLegend()
 
 <https://satijalab.org/seurat/articles/integration_introduction>
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 
 # Assuming CrC_counts and CrC_metadata contain multiple samples, subset each sample
 
-# Subset for sample 1
+# Subset the metadata and counts for sample 1 ("B001-A-301")
 CrC_metadata_subset1 <- subset(metadata, orig.ident == "B001-A-301")
-CrC_counts_subset1 <- gene_data[, rownames(CrC_metadata_subset1)]
-crc_seurat1 <- CreateSeuratObject(counts = CrC_counts_subset1, meta.data = CrC_metadata_subset1)
+CrC_counts_subset1 <- gene_data[, rownames(CrC_metadata_subset1)]  # Subset the count data to match the metadata
+crc_seurat1 <- CreateSeuratObject(counts = CrC_counts_subset1, meta.data = CrC_metadata_subset1)  # Create Seurat object for sample 1
 
-# Subset for sample 2
+# Subset the metadata and counts for sample 2 ("F007")
 CrC_metadata_subset2 <- subset(metadata, orig.ident == "F007")
-CrC_counts_subset2 <- gene_data[, rownames(CrC_metadata_subset2)]
-crc_seurat2 <- CreateSeuratObject(counts = CrC_counts_subset2, meta.data = CrC_metadata_subset2)
+CrC_counts_subset2 <- gene_data[, rownames(CrC_metadata_subset2)]  # Subset the count data to match the metadata
+crc_seurat2 <- CreateSeuratObject(counts = CrC_counts_subset2, meta.data = CrC_metadata_subset2)  # Create Seurat object for sample 2
 
-# Subset for sample 3
+# Subset the metadata and counts for sample 3 ("CRC1_8810")
 CrC_metadata_subset3 <- subset(metadata, orig.ident == "CRC1_8810")
-CrC_counts_subset3 <- gene_data[, rownames(CrC_metadata_subset3)]
-crc_seurat3 <- CreateSeuratObject(counts = CrC_counts_subset3, meta.data = CrC_metadata_subset3)
+CrC_counts_subset3 <- gene_data[, rownames(CrC_metadata_subset3)]  # Subset the count data to match the metadata
+crc_seurat3 <- CreateSeuratObject(counts = CrC_counts_subset3, meta.data = CrC_metadata_subset3)  # Create Seurat object for sample 3
 
+# Normalize the data for each Seurat object individually
+crc_seurat1 <- NormalizeData(crc_seurat1)  # Normalization for sample 1
+crc_seurat2 <- NormalizeData(crc_seurat2)  # Normalization for sample 2
+crc_seurat3 <- NormalizeData(crc_seurat3)  # Normalization for sample 3
 
-crc_seurat1 <- NormalizeData(crc_seurat1)
-crc_seurat2 <- NormalizeData(crc_seurat2)
-crc_seurat3 <- NormalizeData(crc_seurat3)
+# Find the 2000 most variable features for each Seurat object
+crc_seurat1 <- FindVariableFeatures(crc_seurat1, selection.method = "vst", nfeatures = 2000)  # Identify variable features for sample 1
+crc_seurat2 <- FindVariableFeatures(crc_seurat2, selection.method = "vst", nfeatures = 2000)  # Identify variable features for sample 2
+crc_seurat3 <- FindVariableFeatures(crc_seurat3, selection.method = "vst", nfeatures = 2000)  # Identify variable features for sample 3
 
-crc_seurat1 <- FindVariableFeatures(crc_seurat1, selection.method = "vst", nfeatures = 2000)
-crc_seurat2 <- FindVariableFeatures(crc_seurat2, selection.method = "vst", nfeatures = 2000)
-crc_seurat3 <- FindVariableFeatures(crc_seurat3, selection.method = "vst", nfeatures = 2000)
-
+# Find integration anchors across the three Seurat objects
 anchors <- FindIntegrationAnchors(object.list = list(crc_seurat1, crc_seurat2, crc_seurat3), dims = 1:30)
 
+# Integrate the datasets using the identified anchors
 crc_integrated <- IntegrateData(anchorset = anchors, dims = 1:30)
 
-# Scale integrated data
+# Scale the integrated dataset
 crc_integrated <- ScaleData(crc_integrated)
 
-# Run PCA on integrated data
+# Perform PCA (Principal Component Analysis) on the integrated dataset
 crc_integrated <- RunPCA(crc_integrated, npcs = 30)
 
-# Run UMAP on integrated data
+# Run UMAP (Uniform Manifold Approximation and Projection) on the integrated dataset to visualise the data in 2D space
 crc_integrated <- RunUMAP(crc_integrated, reduction = "pca", dims = 1:30)
 
-# Visualize UMAP plot
+# Plot the UMAP to visualise cell clusters
 DimPlot(crc_integrated, reduction = "umap")
 
-# Optionally, create heatmaps or other visualizations
-top10_integrated <- head(VariableFeatures(crc_integrated), 10)
-DoHeatmap(crc_integrated, features = top10_integrated) + NoLegend()
+# Visualise the top 10 variable features using a heatmap
+top10_integrated <- head(VariableFeatures(crc_integrated), 10)  # Identify the top 10 variable features
 
-
+DoHeatmap(crc_integrated, features = top10_integrated) + NoLegend()  # Create heatmap of the top 10 variable features
 
 ```
