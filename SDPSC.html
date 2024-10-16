@@ -99,6 +99,76 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="initial-data-processing" class="level2">
 <h2 class="anchored" data-anchor-id="initial-data-processing">Initial Data Processing</h2>
 <p>This code performs a Seurat-based single-cell RNA sequencing (scRNA-seq) analysis pipeline, processing gene expression data, filtering, normalizing, identifying variable genes, and performing dimensionality reduction with PCA and UMAP, followed by visualisation.</p>
+<ul>
+<li><p><strong>Loading Libraries:</strong></p>
+<ul>
+<li><p><code>Seurat</code>: A package for single-cell RNA sequencing (scRNA-seq) data analysis.</p></li>
+<li><p><code>dplyr</code>: For data manipulation.</p></li>
+<li><p><code>ggplot2</code>: For visualization.</p></li>
+</ul></li>
+<li><p><strong>Loading Data:</strong></p>
+<ul>
+<li><p><code>gene_data</code>: Contains the raw counts of gene expression.</p></li>
+<li><p><code>metadata</code>: Contains metadata associated with each cell, including sample identifiers (<code>orig.ident</code>).</p></li>
+</ul></li>
+<li><p><strong>Subsetting Data:</strong></p>
+<ul>
+<li><p>The unique sample identifiers (<code>orig.ident</code>) from the metadata are checked.</p></li>
+<li><p>The metadata is filtered to only include specific samples (e.g., <code>"B001-A-301"</code>, <code>"F007"</code>, <code>"CRC1_8810"</code>).</p></li>
+<li><p>The <code>gene_data</code> is subsetted to match the cells present in the filtered metadata.</p></li>
+</ul></li>
+<li><p><strong>Creating Seurat Object:</strong></p>
+<ul>
+<li>A Seurat object is created with the subsetted gene counts and metadata. The <code>min.cells = 3</code> argument ensures that genes must be detected in at least 3 cells, and <code>min.features = 200</code> ensures that cells with fewer than 200 detected genes are excluded.</li>
+</ul></li>
+<li><p><strong>Adding Mitochondrial Content:</strong></p>
+<ul>
+<li>Mitochondrial gene expression is calculated and added to the Seurat object as a new feature (<code>percent.mt</code>). Genes starting with <code>"MT-"</code> are identified as mitochondrial genes.</li>
+</ul></li>
+<li><p><strong>Violin Plots:</strong></p>
+<ul>
+<li>A violin plot shows the distribution of the number of detected genes (<code>nFeature_RNA</code>), total RNA counts (<code>nCount_RNA</code>), and mitochondrial percentage (<code>percent.mt</code>) across cells.</li>
+</ul></li>
+<li><p><strong>Filtering Cells:</strong></p>
+<ul>
+<li>Cells with more than 200 genes and less than 5% mitochondrial content are retained for further analysis, ensuring quality control by filtering out low-quality cells.</li>
+</ul></li>
+<li><p><strong>Normalization:</strong></p>
+<ul>
+<li>The <code>NormalizeData()</code> function is applied to normalize gene expression counts using a log-normalization approach, adjusting for differences in sequencing depth across cells.</li>
+</ul></li>
+<li><p><strong>Feature Scatter Plots:</strong></p>
+<ul>
+<li>Scatter plots are created to visualize relationships between RNA counts and mitochondrial content, as well as RNA counts and the number of detected genes, to assess data quality and potential confounding factors.</li>
+</ul></li>
+<li><p><strong>Identifying Variable Features:</strong></p>
+<ul>
+<li><p>The <code>FindVariableFeatures()</code> function identifies the 2000 most variable genes (features) using the “vst” method (variance-stabilizing transformation).</p></li>
+<li><p>The top 10 most variable genes are extracted for further exploration.</p></li>
+</ul></li>
+<li><p><strong>Variable Feature Plot:</strong></p>
+<ul>
+<li>A plot is created to visualize the variable genes, and the top 10 genes are labeled for clarity using the <code>LabelPoints()</code> function.</li>
+</ul></li>
+<li><p><strong>Scaling Data:</strong></p>
+<ul>
+<li>The <code>ScaleData()</code> function standardizes the gene expression data across all cells, scaling each gene’s expression to ensure comparability.</li>
+</ul></li>
+<li><p><strong>Principal Component Analysis (PCA):</strong></p>
+<ul>
+<li><p>PCA is performed on the 2000 most variable genes to reduce the dimensionality of the data while preserving as much variability as possible.</p></li>
+<li><p><code>VizDimLoadings()</code> visualizes PCA loadings (how much each gene contributes to the principal components), and <code>DimPlot()</code> generates a PCA plot for the first two components.</p></li>
+</ul></li>
+<li><p><strong>UMAP (Uniform Manifold Approximation and Projection):</strong></p>
+<ul>
+<li><p>UMAP is run to reduce the dimensionality further and visualize the data in a two-dimensional space.</p></li>
+<li><p>The UMAP plot clusters cells based on gene expression patterns, allowing for easier visualization of similar cells.</p></li>
+</ul></li>
+<li><p><strong>Heatmap:</strong></p>
+<ul>
+<li>A heatmap of the top 10 variable genes is generated using <code>DoHeatmap()</code>, visualizing the gene expression levels across cells. The <code>NoLegend()</code> function removes the legend for cleaner visualization.</li>
+</ul></li>
+</ul>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -246,53 +316,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="integration" class="level2">
 <h2 class="anchored" data-anchor-id="integration">Integration</h2>
 <p><a href="https://satijalab.org/seurat/articles/integration_introduction" class="uri">https://satijalab.org/seurat/articles/integration_introduction</a></p>
+<ul>
+<li><p><strong>Subsetting:</strong> The code subsets the metadata and count data for each sample, creating individual Seurat objects.</p></li>
+<li><p><strong>Normalization:</strong> Each Seurat object is normalized to adjust for sequencing depth.</p></li>
+<li><p><strong>Variable Features:</strong> The top 2000 variable features are identified for each Seurat object.</p></li>
+<li><p><strong>Integration Anchors:</strong> Integration anchors are found to align the datasets.</p></li>
+<li><p><strong>Integration:</strong> The datasets are integrated into a single Seurat object.</p></li>
+<li><p><strong>Scaling and PCA:</strong> The integrated data is scaled and reduced via PCA.</p></li>
+<li><p><strong>UMAP:</strong> UMAP is run to visualize cell clusters.</p></li>
+<li><p><strong>Heatmap:</strong> Optionally, the top 10 variable genes are visualized in a heatmap.</p></li>
+</ul>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming CrC_counts and CrC_metadata contain multiple samples, subset each sample</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the metadata and counts for sample 1 ("B001-A-301")</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>CrC_metadata_subset1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(metadata, orig.ident <span class="sc">==</span> <span class="st">"B001-A-301"</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset1 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset1)]  <span class="co"># Subset the count data to match the metadata</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset1, <span class="at">meta.data =</span> CrC_metadata_subset1)  <span class="co"># Create Seurat object for sample 1</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the metadata and counts for sample 2 ("F007")</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>CrC_metadata_subset2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(metadata, orig.ident <span class="sc">==</span> <span class="st">"F007"</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset2 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset2)]  <span class="co"># Subset the count data to match the metadata</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset2, <span class="at">meta.data =</span> CrC_metadata_subset2)  <span class="co"># Create Seurat object for sample 2</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the metadata and counts for sample 3 ("CRC1_8810")</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>CrC_metadata_subset3 <span class="ot">&lt;-</span> <span class="fu">subset</span>(metadata, orig.ident <span class="sc">==</span> <span class="st">"CRC1_8810"</span>)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset3 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset3)]  <span class="co"># Subset the count data to match the metadata</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset3, <span class="at">meta.data =</span> CrC_metadata_subset3)  <span class="co"># Create Seurat object for sample 3</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize the data for each Seurat object individually</span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat1)  <span class="co"># Normalization for sample 1</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat2)  <span class="co"># Normalization for sample 2</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat3)  <span class="co"># Normalization for sample 3</span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the 2000 most variable features for each Seurat object</span></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat1, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)  <span class="co"># Identify variable features for sample 1</span></span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat2, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)  <span class="co"># Identify variable features for sample 2</span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat3, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)  <span class="co"># Identify variable features for sample 3</span></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Find integration anchors across the three Seurat objects</span></span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>anchors <span class="ot">&lt;-</span> <span class="fu">FindIntegrationAnchors</span>(<span class="at">object.list =</span> <span class="fu">list</span>(crc_seurat1, crc_seurat2, crc_seurat3), <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Integrate the datasets using the identified anchors</span></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">IntegrateData</span>(<span class="at">anchorset =</span> anchors, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale the integrated dataset</span></span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(crc_integrated)</span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform PCA (Principal Component Analysis) on the integrated dataset</span></span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(crc_integrated, <span class="at">npcs =</span> <span class="dv">30</span>)</span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP (Uniform Manifold Approximation and Projection) on the integrated dataset to visualise the data in 2D space</span></span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(crc_integrated, <span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP to visualise cell clusters</span></span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(crc_integrated, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the metadata and counts for sample 1 ("B001-A-301")</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>CrC_metadata_subset1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(metadata, orig.ident <span class="sc">==</span> <span class="st">"B001-A-301"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset1 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset1)]  <span class="co"># Subset the count data to match the metadata</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset1, <span class="at">meta.data =</span> CrC_metadata_subset1)  <span class="co"># Create Seurat object for sample 1</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the metadata and counts for sample 2 ("F007")</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>CrC_metadata_subset2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(metadata, orig.ident <span class="sc">==</span> <span class="st">"F007"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset2 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset2)]  <span class="co"># Subset the count data to match the metadata</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset2, <span class="at">meta.data =</span> CrC_metadata_subset2)  <span class="co"># Create Seurat object for sample 2</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the metadata and counts for sample 3 ("CRC1_8810")</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>CrC_metadata_subset3 <span class="ot">&lt;-</span> <span class="fu">subset</span>(metadata, orig.ident <span class="sc">==</span> <span class="st">"CRC1_8810"</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>CrC_counts_subset3 <span class="ot">&lt;-</span> gene_data[, <span class="fu">rownames</span>(CrC_metadata_subset3)]  <span class="co"># Subset the count data to match the metadata</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> CrC_counts_subset3, <span class="at">meta.data =</span> CrC_metadata_subset3)  <span class="co"># Create Seurat object for sample 3</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize the data for each Seurat object individually</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat1)  <span class="co"># Normalization for sample 1</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat2)  <span class="co"># Normalization for sample 2</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(crc_seurat3)  <span class="co"># Normalization for sample 3</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the 2000 most variable features for each Seurat object</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>crc_seurat1 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat1, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)  <span class="co"># Identify variable features for sample 1</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>crc_seurat2 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat2, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)  <span class="co"># Identify variable features for sample 2</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>crc_seurat3 <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(crc_seurat3, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)  <span class="co"># Identify variable features for sample 3</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Find integration anchors across the three Seurat objects</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>anchors <span class="ot">&lt;-</span> <span class="fu">FindIntegrationAnchors</span>(<span class="at">object.list =</span> <span class="fu">list</span>(crc_seurat1, crc_seurat2, crc_seurat3), <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Integrate the datasets using the identified anchors</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">IntegrateData</span>(<span class="at">anchorset =</span> anchors, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale the integrated dataset</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(crc_integrated)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform PCA (Principal Component Analysis) on the integrated dataset</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(crc_integrated, <span class="at">npcs =</span> <span class="dv">30</span>)</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP (Uniform Manifold Approximation and Projection) on the integrated dataset to visualise the data in 2D space</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>crc_integrated <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(crc_integrated, <span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP to visualise cell clusters</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(crc_integrated, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>

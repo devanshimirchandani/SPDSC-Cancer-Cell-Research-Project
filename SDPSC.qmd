@@ -9,6 +9,82 @@ code-fold: true
 
 This code performs a Seurat-based single-cell RNA sequencing (scRNA-seq) analysis pipeline, processing gene expression data, filtering, normalizing, identifying variable genes, and performing dimensionality reduction with PCA and UMAP, followed by visualisation.
 
+-   **Loading Libraries:**
+
+    -   `Seurat`: A package for single-cell RNA sequencing (scRNA-seq) data analysis.
+
+    -   `dplyr`: For data manipulation.
+
+    -   `ggplot2`: For visualization.
+
+-   **Loading Data:**
+
+    -   `gene_data`: Contains the raw counts of gene expression.
+
+    -   `metadata`: Contains metadata associated with each cell, including sample identifiers (`orig.ident`).
+
+-   **Subsetting Data:**
+
+    -   The unique sample identifiers (`orig.ident`) from the metadata are checked.
+
+    -   The metadata is filtered to only include specific samples (e.g., `"B001-A-301"`, `"F007"`, `"CRC1_8810"`).
+
+    -   The `gene_data` is subsetted to match the cells present in the filtered metadata.
+
+-   **Creating Seurat Object:**
+
+    -   A Seurat object is created with the subsetted gene counts and metadata. The `min.cells = 3` argument ensures that genes must be detected in at least 3 cells, and `min.features = 200` ensures that cells with fewer than 200 detected genes are excluded.
+
+-   **Adding Mitochondrial Content:**
+
+    -   Mitochondrial gene expression is calculated and added to the Seurat object as a new feature (`percent.mt`). Genes starting with `"MT-"` are identified as mitochondrial genes.
+
+-   **Violin Plots:**
+
+    -   A violin plot shows the distribution of the number of detected genes (`nFeature_RNA`), total RNA counts (`nCount_RNA`), and mitochondrial percentage (`percent.mt`) across cells.
+
+-   **Filtering Cells:**
+
+    -   Cells with more than 200 genes and less than 5% mitochondrial content are retained for further analysis, ensuring quality control by filtering out low-quality cells.
+
+-   **Normalization:**
+
+    -   The `NormalizeData()` function is applied to normalize gene expression counts using a log-normalization approach, adjusting for differences in sequencing depth across cells.
+
+-   **Feature Scatter Plots:**
+
+    -   Scatter plots are created to visualize relationships between RNA counts and mitochondrial content, as well as RNA counts and the number of detected genes, to assess data quality and potential confounding factors.
+
+-   **Identifying Variable Features:**
+
+    -   The `FindVariableFeatures()` function identifies the 2000 most variable genes (features) using the "vst" method (variance-stabilizing transformation).
+
+    -   The top 10 most variable genes are extracted for further exploration.
+
+-   **Variable Feature Plot:**
+
+    -   A plot is created to visualize the variable genes, and the top 10 genes are labeled for clarity using the `LabelPoints()` function.
+
+-   **Scaling Data:**
+
+    -   The `ScaleData()` function standardizes the gene expression data across all cells, scaling each gene's expression to ensure comparability.
+
+-   **Principal Component Analysis (PCA):**
+
+    -   PCA is performed on the 2000 most variable genes to reduce the dimensionality of the data while preserving as much variability as possible.
+
+    -   `VizDimLoadings()` visualizes PCA loadings (how much each gene contributes to the principal components), and `DimPlot()` generates a PCA plot for the first two components.
+
+-   **UMAP (Uniform Manifold Approximation and Projection):**
+
+    -   UMAP is run to reduce the dimensionality further and visualize the data in a two-dimensional space.
+
+    -   The UMAP plot clusters cells based on gene expression patterns, allowing for easier visualization of similar cells.
+
+-   **Heatmap:**
+
+    -   A heatmap of the top 10 variable genes is generated using `DoHeatmap()`, visualizing the gene expression levels across cells. The `NoLegend()` function removes the legend for cleaner visualization.
+
 ```{r message=FALSE, warning=FALSE}
 # Load necessary libraries
 library(Seurat)
@@ -87,9 +163,23 @@ DoHeatmap(crc_seurat, features = top10) + NoLegend()
 
 <https://satijalab.org/seurat/articles/integration_introduction>
 
-```{r message=FALSE, warning=FALSE}
+-   **Subsetting:** The code subsets the metadata and count data for each sample, creating individual Seurat objects.
 
-# Assuming CrC_counts and CrC_metadata contain multiple samples, subset each sample
+-   **Normalization:** Each Seurat object is normalized to adjust for sequencing depth.
+
+-   **Variable Features:** The top 2000 variable features are identified for each Seurat object.
+
+-   **Integration Anchors:** Integration anchors are found to align the datasets.
+
+-   **Integration:** The datasets are integrated into a single Seurat object.
+
+-   **Scaling and PCA:** The integrated data is scaled and reduced via PCA.
+
+-   **UMAP:** UMAP is run to visualize cell clusters.
+
+-   **Heatmap:** Optionally, the top 10 variable genes are visualized in a heatmap.
+
+```{r message=FALSE, warning=FALSE}
 
 # Subset the metadata and counts for sample 1 ("B001-A-301")
 CrC_metadata_subset1 <- subset(metadata, orig.ident == "B001-A-301")
