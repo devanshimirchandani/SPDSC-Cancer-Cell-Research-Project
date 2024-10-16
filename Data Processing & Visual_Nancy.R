@@ -72,3 +72,11 @@ DimPlot(integrated_seurat, reduction = "umap", split.by = "DifferentialGroup")
 
 # UMAP plot split by DiseaseState
 DimPlot(integrated_seurat, reduction = "umap", split.by = "DiseaseState")
+
+
+
+# Visualize UMAP, colored by cell type (e.g., "seurat_annotations") and condition ("DiseaseState")
+DimPlot(integrated_seurat, reduction = "umap", group.by = c("DiseaseState", "seurat_clusters"))
+
+# Side-by-Side Visualization of Disease States
+DimPlot(integrated_seurat, reduction = "umap", split.by = "DiseaseState")
