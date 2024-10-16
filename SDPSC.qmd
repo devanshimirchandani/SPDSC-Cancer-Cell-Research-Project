@@ -1,10 +1,15 @@
 ---
-title: "SDPSC"
+title: "Integrative Analysis of Colorectal Cancer Single-Cell RNA Sequencing Data"
 format: html
 editor: visual
+code-fold: true
 ---
 
-```{r}
+## Initial Data Processing
+
+This code performs a Seurat-based single-cell RNA sequencing (scRNA-seq) analysis pipeline, processing gene expression data, filtering, normalizing, identifying variable genes, and performing dimensionality reduction with PCA and UMAP, followed by visualisation.
+
+```{r message=FALSE, warning=FALSE}
 # Load necessary libraries
 library(Seurat)
 library(dplyr)
@@ -75,6 +80,60 @@ DimPlot(crc_seurat, reduction = "umap")
 
 # Heatmap of the top 10 variable genes
 DoHeatmap(crc_seurat, features = top10) + NoLegend()
+
+```
+
+## Integration
+
+<https://satijalab.org/seurat/articles/integration_introduction>
+
+```{r}
+
+# Assuming CrC_counts and CrC_metadata contain multiple samples, subset each sample
+
+# Subset for sample 1
+CrC_metadata_subset1 <- subset(metadata, orig.ident == "B001-A-301")
+CrC_counts_subset1 <- gene_data[, rownames(CrC_metadata_subset1)]
+crc_seurat1 <- CreateSeuratObject(counts = CrC_counts_subset1, meta.data = CrC_metadata_subset1)
+
+# Subset for sample 2
+CrC_metadata_subset2 <- subset(metadata, orig.ident == "F007")
+CrC_counts_subset2 <- gene_data[, rownames(CrC_metadata_subset2)]
+crc_seurat2 <- CreateSeuratObject(counts = CrC_counts_subset2, meta.data = CrC_metadata_subset2)
+
+# Subset for sample 3
+CrC_metadata_subset3 <- subset(metadata, orig.ident == "CRC1_8810")
+CrC_counts_subset3 <- gene_data[, rownames(CrC_metadata_subset3)]
+crc_seurat3 <- CreateSeuratObject(counts = CrC_counts_subset3, meta.data = CrC_metadata_subset3)
+
+
+crc_seurat1 <- NormalizeData(crc_seurat1)
+crc_seurat2 <- NormalizeData(crc_seurat2)
+crc_seurat3 <- NormalizeData(crc_seurat3)
+
+crc_seurat1 <- FindVariableFeatures(crc_seurat1, selection.method = "vst", nfeatures = 2000)
+crc_seurat2 <- FindVariableFeatures(crc_seurat2, selection.method = "vst", nfeatures = 2000)
+crc_seurat3 <- FindVariableFeatures(crc_seurat3, selection.method = "vst", nfeatures = 2000)
+
+anchors <- FindIntegrationAnchors(object.list = list(crc_seurat1, crc_seurat2, crc_seurat3), dims = 1:30)
+
+crc_integrated <- IntegrateData(anchorset = anchors, dims = 1:30)
+
+# Scale integrated data
+crc_integrated <- ScaleData(crc_integrated)
+
+# Run PCA on integrated data
+crc_integrated <- RunPCA(crc_integrated, npcs = 30)
+
+# Run UMAP on integrated data
+crc_integrated <- RunUMAP(crc_integrated, reduction = "pca", dims = 1:30)
+
+# Visualize UMAP plot
+DimPlot(crc_integrated, reduction = "umap")
+
+# Optionally, create heatmaps or other visualizations
+top10_integrated <- head(VariableFeatures(crc_integrated), 10)
+DoHeatmap(crc_integrated, features = top10_integrated) + NoLegend()
 
 
 
