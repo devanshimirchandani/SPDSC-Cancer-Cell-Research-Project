@@ -1,0 +1,266 @@
+---
+title: "SPDSC Research Project"
+date: "2024-09-29"
+author: "Veronica Tsou"
+format: 
+  html: 
+    embed-resources: true 
+    code-fold: show 
+    code-tools: true 
+    code-line-numbers: true # Line numbers in code chunks
+    df-print: paged # Sets how dataframes are automatically printed
+    theme: lux # Controls the font, colours, etc.
+table-of-contents: true  
+number-sections: true 
+---
+## Data Processing
+```{r}
+library(dplyr)
+library(Seurat)
+library(patchwork)
+library(ggplot2)
+```
+
+```{r}
+CrC_counts <- readRDS("CrC_counts.Rds")
+CrC_metadata <- readRDS("CrC_metadata.Rds")
+```
+
+```{r}
+unique(CrC_metadata$Donor)
+# group by this
+```
+
+```{r}
+crc_seurat <- CreateSeuratObject(counts = CrC_counts)
+crc_seurat <- AddMetaData(object = crc_seurat, metadata = as.data.frame(CrC_metadata))
+
+# Create the Seurat object with the subset data
+#crc_seurat <- CreateSeuratObject(counts = CrC_counts, meta.data = CrC_metadata, project = "CRC_analysis", min.cells = 3, min.features = 200)
+
+# View the basic structure of the Seurat object
+crc_seurat
+```
+```{r}
+length(Cells(crc_seurat))
+length(crc_seurat@meta.data$Donor)
+```
+
+```{r}
+table(crc_seurat@meta.data$Donor)
+```
+
+
+
+```{r}
+cells_by_donor <- split(Cells(crc_seurat), crc_seurat@meta.data$Donor)
+```
+
+```{r}
+set.seed(123)  # Set seed for reproducibility 
+sampled_cells <- unlist(lapply(cells_by_donor, function(cells) {sample(cells, size = min(5000, length(cells)), replace = FALSE)}))
+```
+
+```{r}
+sampled_crc_seurat <- subset(crc_seurat, cells = sampled_cells)
+sampled_crc_seurat
+```
+
+```{r}
+sampled_crc_seurat[["percent.mt"]] <- PercentageFeatureSet(sampled_crc_seurat, pattern = "^MT-")
+```
+
+```{r}
+VlnPlot(sampled_crc_seurat, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3) 
+```
+
+
+```{r}
+sampled_crc_seurat <- subset(sampled_crc_seurat, subset = nFeature_RNA > 200 & percent.mt < 5)
+```
+
+```{r}
+sampled_crc_seurat <- NormalizeData(sampled_crc_seurat)
+```
+
+```{r}
+plot1 <- FeatureScatter(sampled_crc_seurat, feature1 = "nCount_RNA", feature2 = "percent.mt", group.by = "Donor")
+plot2 <- FeatureScatter(sampled_crc_seurat, feature1 = "nCount_RNA", feature2 = "nFeature_RNA", group.by = "Donor")
+
+# Combine the two plots
+plot1
+plot2
+```
+```{r}
+sampled_crc_seurat <- FindVariableFeatures(sampled_crc_seurat, selection.method = "vst", nfeatures = 2000)
+
+# Identify the 10 most highly variable genes
+top10 <- head(VariableFeatures(sampled_crc_seurat), 10)
+
+# Plot variable features with and without labels
+plot1 <- VariableFeaturePlot(sampled_crc_seurat)
+plot2 <- LabelPoints(plot = plot1, points = top10, repel = TRUE)
+
+plot1
+plot2
+```
+```{r}
+all.genes <- rownames(sampled_crc_seurat)
+sampled_crc_seurat <- ScaleData(sampled_crc_seurat, features = all.genes)
+```
+
+```{r}
+sampled_crc_seurat
+```
+
+```{r}
+sampled_crc_seurat <- RunPCA(sampled_crc_seurat, features = VariableFeatures(sampled_crc_seurat))
+```
+
+```{r}
+VizDimLoadings(sampled_crc_seurat, dims = 1:2, reduction = "pca") 
+```
+
+```{r}
+DimPlot(sampled_crc_seurat, reduction = "pca", group.by = "Donor")
+```
+
+```{r}
+sampled_crc_seurat <- RunUMAP(sampled_crc_seurat, dims = 1:10) 
+```
+
+```{r}
+DimPlot(sampled_crc_seurat, reduction = "umap", group.by = "Donor")
+```
+
+```{r message=FALSE, warning=FALSE}
+CrC_metadata_subset1 <- subset(CrC_metadata, Donor == "B001")
+CrC_counts_subset1 <- CrC_counts[, rownames(CrC_metadata_subset1)]  # Subset the count data to match the metadata
+crc_seurat1 <- CreateSeuratObject(counts = CrC_counts_subset1, meta.data = CrC_metadata_subset1)  # Create Seurat object for sample 1
+
+CrC_metadata_subset2 <- subset(CrC_metadata, Donor == "F")
+CrC_counts_subset2 <- CrC_counts[, rownames(CrC_metadata_subset2)]  # Subset the count data to match the metadata
+crc_seurat2 <- CreateSeuratObject(counts = CrC_counts_subset2, meta.data = CrC_metadata_subset2)  # Create Seurat object for sample 2
+
+CrC_metadata_subset3 <- subset(CrC_metadata, Donor == "CRC1")
+CrC_counts_subset3 <- CrC_counts[, rownames(CrC_metadata_subset3)]  # Subset the count data to match the metadata
+crc_seurat3 <- CreateSeuratObject(counts = CrC_counts_subset3, meta.data = CrC_metadata_subset3)  # Create Seurat object for sample 3
+
+```
+
+```{r}
+# Normalize the data for each Seurat object individually
+crc_seurat1 <- NormalizeData(crc_seurat1)  # Normalization for sample 1
+crc_seurat2 <- NormalizeData(crc_seurat2)  # Normalization for sample 2
+crc_seurat3 <- NormalizeData(crc_seurat3)  # Normalization for sample 3
+
+# Find the 2000 most variable features for each Seurat object
+crc_seurat1 <- FindVariableFeatures(crc_seurat1, selection.method = "vst", nfeatures = 2000)  # Identify variable features for sample 1
+crc_seurat2 <- FindVariableFeatures(crc_seurat2, selection.method = "vst", nfeatures = 2000)  # Identify variable features for sample 2
+crc_seurat3 <- FindVariableFeatures(crc_seurat3, selection.method = "vst", nfeatures = 2000)  # Identify variable features for sample 3
+```
+
+```{r}
+# Find integration anchors across the three Seurat objects
+anchors <- FindIntegrationAnchors(object.list = list(crc_seurat1, crc_seurat2, crc_seurat3), dims = 1:30)
+
+# Integrate the datasets using the identified anchors
+crc_integrated <- IntegrateData(anchorset = anchors, dims = 1:30)
+
+# Scale the integrated dataset
+crc_integrated <- ScaleData(crc_integrated)
+
+# Perform PCA (Principal Component Analysis) on the integrated dataset
+crc_integrated <- RunPCA(crc_integrated, npcs = 30)
+
+# Run UMAP  on the integrated dataset to visualise the data in 2D space
+crc_integrated <- RunUMAP(crc_integrated, reduction = "pca", dims = 1:30)
+
+# Plot the UMAP to visualise cell clusters
+DimPlot(crc_integrated, reduction = "umap")
+
+# Visualise the top 10 variable features using a heatmap
+top10_integrated <- head(VariableFeatures(crc_integrated), 10)  # Identify the top 10 variable features
+
+DoHeatmap(crc_integrated, features = top10_integrated) + NoLegend()  # Create heatmap of the top 10 variable features
+
+```
+
+```{r}
+crc_integrated <- RunPCA(crc_integrated, npcs = 30, verbose = FALSE)
+
+crc_integrated <- RunUMAP(crc_integrated, dims = 1:30, reduction = "pca")
+```
+
+```{r}
+crc_integrated <- FindNeighbors(crc_integrated, reduction = "pca", dims = 1:30)
+crc_integrated <- FindClusters(crc_integrated, resolution = 0.5)
+```
+
+```{r}
+DimPlot(crc_integrated, reduction = "umap", group.by = "seurat_clusters") + ggtitle("UMAP Plot Colored by Clusters")
+
+```
+```{r}
+common_cells <- intersect(colnames(crc_seurat), colnames(crc_integrated))
+
+# Initialize 'CellType' column in crc_integrated as NA
+crc_integrated$CellType <- NA
+
+# Transfer 'CellType' from crc_seurat to crc_integrated for common cells
+crc_integrated$CellType[common_cells] <- crc_seurat$CellType[common_cells]
+
+# Check if the 'CellType' column has been transferred correctly
+head(crc_integrated@meta.data$CellType)
+
+sum(is.na(crc_integrated$CellType)) 
+```
+
+```{r}
+cluster_markers <- FindAllMarkers(crc_integrated, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
+
+# View top 5 markers per cluster
+top_5_markers <- cluster_markers %>% group_by(cluster) %>% top_n(n = 5, wt = avg_log2FC)
+
+# View top 1 marker per cluster
+top_markers <- cluster_markers %>% 
+  group_by(cluster) %>% 
+  top_n(n = 1, wt = avg_log2FC)
+
+# Display the top marker genes for each cluster
+top_markers
+```
+
+```{r}
+crc_integrated$cell_type <- plyr::mapvalues(
+  x = Idents(crc_integrated),  # Cluster identities
+  from = c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"),  # Cluster IDs
+  to = c(
+    "PURPL",      # Cluster 0
+    "AC078993.1", # Cluster 1
+    "LINC01431",  # Cluster 2
+    "NEIL3",      # Cluster 3
+    "TNFRSF19",   # Cluster 4
+    "REP15",      # Cluster 5
+    "SPRR2A",     # Cluster 6
+    "ADAM2",      # Cluster 7
+    "DAZL",       # Cluster 8
+    "EDNRA",      # Cluster 9
+    "SHISA3",     # Cluster 10
+    "SIRPG",      # Cluster 11
+    "AC103718.1", # Cluster 12
+    "MMP2-AS1",   # Cluster 13
+    "BEST4",      # Cluster 14
+    "LINC02227",  # Cluster 15
+    "PAX5",       # Cluster 16
+    "PTPRZ1",     # Cluster 17
+    "SH2D6",      # Cluster 18
+    "CHGB"        # Cluster 19
+  )
+)
+```
+
+```{r}
+DimPlot(crc_integrated, reduction = "umap", group.by = "cell_type") + ggtitle("UMAP Colored by Cell Type")
+```
+
