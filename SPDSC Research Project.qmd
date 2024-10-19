@@ -232,31 +232,31 @@ top_markers
 ```
 
 ```{r}
-# Annotations -> clarify the Cell Type (haven't finished)
+# Annotations -> clarify the Cell Type
 crc_integrated$cell_type <- plyr::mapvalues(
   x = Idents(crc_integrated),  # Cluster identities
   from = c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"),  # Cluster IDs
   to = c(
-    "PURPL",      # Cluster 0
-    "AC078993.1", # Cluster 1
-    "LINC01431",  # Cluster 2
-    "NEIL3",      # Cluster 3
-    "TNFRSF19",   # Cluster 4
-    "REP15",      # Cluster 5
-    "SPRR2A",     # Cluster 6
-    "ADAM2",      # Cluster 7
-    "DAZL",       # Cluster 8
-    "EDNRA",      # Cluster 9
-    "SHISA3",     # Cluster 10
-    "SIRPG",      # Cluster 11
-    "AC103718.1", # Cluster 12
-    "MMP2-AS1",   # Cluster 13
-    "BEST4",      # Cluster 14
-    "LINC02227",  # Cluster 15
-    "PAX5",       # Cluster 16
-    "PTPRZ1",     # Cluster 17
-    "SH2D6",      # Cluster 18
-    "CHGB"        # Cluster 19
+    "Epithelial cells",  # PURPL is associated with p53 pathway, often active in epithelial cells
+    "Stromal cells",     # AC078993.1 is a lncRNA, possibly involved in stromal cell regulation
+    "Fibroblasts",       # LINC01431 might be involved in fibroblast regulation
+    "Proliferating cells", # NEIL3 is involved in DNA repair, often active in proliferating cells
+    "Mesenchymal cells", # TNFRSF19 is involved in cell differentiation, possibly mesenchymal
+    "Epithelial cells",  # REP15 is involved in endocytic recycling, important in epithelial cells
+    "Keratinocytes",     # SPRR2A is involved in keratinocyte differentiation
+    "Germ cells",        # ADAM2 is typically expressed in germ cells
+    "Germ cells",        # DAZL is a germ cell-specific RNA-binding protein
+    "Smooth muscle cells", # EDNRA is often expressed in smooth muscle cells
+    "Epithelial cells",  # SHISA3 is involved in cell differentiation, possibly epithelial
+    "T cells",           # SIRPG is expressed in T cells
+    "Stromal cells",     # AC103718.1 is a lncRNA, possibly involved in stromal cell regulation
+    "Stromal cells",     # MMP2-AS1 might be involved in extracellular matrix remodeling
+    "Goblet cells",      # BEST4 is expressed in a subset of goblet cells
+    "Stromal cells",     # LINC02227 is a lncRNA, possibly involved in stromal cell regulation
+    "B cells",           # PAX5 is a key regulator of B-cell development
+    "Glial cells",       # PTPRZ1 is often expressed in glial cells
+    "Enteroendocrine cells", # SH2D6 is associated with enteroendocrine cells
+    "Enteroendocrine cells"  # CHGB is a marker for enteroendocrine cells
   )
 )
 ```
