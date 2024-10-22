@@ -234,31 +234,35 @@ top_5_markers
 
 ## Annotations 
 ```{r}
-#Annotations -> clarify the Cell Type
+# Annotations -> clarify the Cell Type
 crc_integrated$cell_type <- plyr::mapvalues(
-  x = Idents(crc_integrated),  # Cluster identities
-  from = c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"),  # Cluster IDs
+  x = Idents(crc_integrated), # Cluster identities
+  from = c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"),
   to = c(
-    "Epithelial cells",  # PURPL is associated with p53 pathway, often active in epithelial cells
-    "Stromal cells",     # AC078993.1 is a lncRNA, possibly involved in stromal cell regulation
-    "Fibroblasts",       # LINC01431 might be involved in fibroblast regulation
-    "Proliferating cells", # NEIL3 is involved in DNA repair, often active in proliferating cells
-    "Mesenchymal cells", # TNFRSF19 is involved in cell differentiation, possibly mesenchymal
-    "Epithelial cells",  # REP15 is involved in endocytic recycling, important in epithelial cells
-    "Keratinocytes",     # SPRR2A is involved in keratinocyte differentiation
-    "Germ cells",        # ADAM2 is typically expressed in germ cells
-    "Germ cells",        # DAZL is a germ cell-specific RNA-binding protein
-    "Smooth muscle cells", # EDNRA is often expressed in smooth muscle cells
-    "Epithelial cells",  # SHISA3 is involved in cell differentiation, possibly epithelial
-    "T cells",           # SIRPG is expressed in T cells
-    "Stromal cells",     # AC103718.1 is a lncRNA, possibly involved in stromal cell regulation
-    "Stromal cells",     # MMP2-AS1 might be involved in extracellular matrix remodeling
-    "Goblet cells",      # BEST4 is expressed in a subset of goblet cells
-    "Stromal cells",     # LINC02227 is a lncRNA, possibly involved in stromal cell regulation
-    "B cells",           # PAX5 is a key regulator of B-cell development
-    "Glial cells",       # PTPRZ1 is often expressed in glial cells
-    "Enteroendocrine cells", # SH2D6 is associated with enteroendocrine cells
-    "Enteroendocrine cells"  # CHGB is a marker for enteroendocrine cells
+    "Intestinal stem cell 1", # Cluster 0 (OLFM4)
+    "Intestinal crypt stem cell", # Cluster 1 (From ACT)
+    "Cluster 2", # Cluster 2
+    "Enteroendocrine cell", # Cluster 3 (NR5A2)
+    "Smooth muscle cell", # Cluster 4 (From ACT)
+    "Epithelial cell 1", # Cluster 5 (FERMT1)
+    "Goblet cell 1", # Cluster 6 (From ACT)
+    "Intestinal stem cell 2", # Cluster 7 (APCDD1, CEMIP)
+    "Monocyte", # Cluster 8 (From ACT)
+    "Goblet cell 2", # Cluster 9 (From ACT)
+    "Epithelial cell 2", # Cluster 10 (NKD1)
+    "Enterocyte of colon", # Cluster 11 (From ACT)
+    "Intestinal stem cell", # Cluster 12 (OLFM4)
+    "Epithelial cell 3", # Cluster 13 (CDC25C)
+    "Proliferating cell", # Cluster 14 (BRIP1, HELLS, BRCA2, DTL)
+    "Dendritic cell, human", # Cluster 15 (From ACT)
+    "Fibroblast", # Cluster 16 (From ACT)
+    "Goblet cell 3", # Cluster 17 (From ACT)
+    "Epithelial cell 4", # Cluster 18 (ST6GAL1)
+    "CD8+ T cell", # Cluster 19 (From ACT)
+    "Epithelial cell 5", # Cluster 20 (MUC4)
+    "Endothelial cell of vascular tree", # Cluster 21 (From ACT)
+    "Macrophage", # Cluster 22 (From ACT)
+    "Goblet cell 4" # Cluster 23 (From ACT)
   )
 )
 ```
