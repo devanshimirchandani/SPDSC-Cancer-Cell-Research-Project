@@ -1,7 +1,7 @@
 ---
 title: "SPDSC Research Project"
 date: "2024-09-29"
-author: "Veronica Tsou, Nancy Mnasnan Seamorntham"
+author: "Veronica Tsou, Nancy Mnasnan Seamorntham, Devanshi Mirchandani"
 format: 
   html: 
     embed-resources: true 
